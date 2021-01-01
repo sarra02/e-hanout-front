@@ -28,4 +28,8 @@ export class CatalogueService {
     });
     return this.http.request(req);
   }
+
+  public patchResource(url,data){
+    return this.http.patch(url,data);
+  }
 }

@@ -38,6 +38,7 @@ export class AuthenticationService {
     }
     return  false;
   }
+
   public saveAuthenticatedUser() {
     if (this.authenticatedUser) {
       localStorage.setItem('authToken', this.token);
@@ -54,7 +55,7 @@ export class AuthenticationService {
     }
 
   }
-
+  //logout
   public removeTokenFromLocalStorage() {
     localStorage.removeItem('authToken');
     this.isAuthenticated = false;

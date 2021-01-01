@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CatalogueService} from './shared/services/catalogue.service';
 import {Router} from '@angular/router';
 import {AuthenticationService} from './shared/services/authentication.service';
+import {CaddyService} from './shared/services/caddy.service';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,8 @@ export class AppComponent implements OnInit{
   private currentCategory;
   constructor(private catService: CatalogueService,
               private router: Router,
-              private authService: AuthenticationService) {
+              private authService: AuthenticationService,
+              private caddyService: CaddyService) {
   }
   ngOnInit(): void {
     this.getCategories();
@@ -51,7 +53,12 @@ export class AppComponent implements OnInit{
   }
 
   onLogout() {
+    this.caddyService.emptyCaddy();
     this.authService.removeTokenFromLocalStorage();
     this.router.navigateByUrl("/login");
+  }
+
+  onLogin() {
+    this.router.navigateByUrl('/login');
   }
 }

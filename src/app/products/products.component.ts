@@ -4,6 +4,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
 import {AuthenticationService} from '../shared/services/authentication.service';
 import {Product} from '../shared/models/product.model';
+import {CaddyService} from '../shared/services/caddy.service';
 
 @Component({
   selector: 'app-products',
@@ -22,7 +23,8 @@ export class ProductsComponent implements OnInit {
 
   constructor(private catService: CatalogueService,
               private route: ActivatedRoute, private router: Router,
-              private authService: AuthenticationService) { }
+              private authService: AuthenticationService,
+              private caddyService: CaddyService) { }
 
   ngOnInit(): void {
     this.router.events.subscribe((val) => {
@@ -98,12 +100,17 @@ export class ProductsComponent implements OnInit {
     return this.authService.isAdmin();
   }
 
-  onAddProductToCaddy(p: any) {
-
-  }
-
   onProductDetails(p: Product) {
     let url = btoa(p._links.product.href);
     this.router.navigateByUrl(`product-details/${url}`);
+  }
+
+  onAddProductToCaddy(p: Product) {
+    if(!this.authService.isAuthenticated){
+      this.router.navigateByUrl("/login");
+    }
+    else{
+      this.caddyService.addProduct(p);
+    }
   }
 }
