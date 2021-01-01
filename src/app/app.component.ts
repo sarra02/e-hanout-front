@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {CatalogueService} from './services/catalogue.service';
+import {CatalogueService} from './shared/services/catalogue.service';
 import {Router} from '@angular/router';
-import {AuthenticationService} from './services/authentication.service';
+import {AuthenticationService} from './shared/services/authentication.service';
 
 @Component({
   selector: 'app-root',

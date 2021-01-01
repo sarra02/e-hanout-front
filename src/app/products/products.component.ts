@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {CatalogueService} from '../services/catalogue.service';
+import {CatalogueService} from '../shared/services/catalogue.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
-import {AuthenticationService} from '../services/authentication.service';
+import {AuthenticationService} from '../shared/services/authentication.service';
+import {Product} from '../shared/models/product.model';
 
 @Component({
   selector: 'app-products',
@@ -36,7 +37,7 @@ export class ProductsComponent implements OnInit {
         } else if (p1 == 2) {
 
           let idCat = this.route.snapshot.params.p2;
-          this.title = ""
+          this.title = "Catégorie"+ idCat;
           this.getProducts(`/categories/${idCat}/products`);
         } else if (p1 == 3) {
           this.title = "Produits en promotion";
@@ -101,7 +102,8 @@ export class ProductsComponent implements OnInit {
 
   }
 
-  onProductDetails(p: any) {
-
+  onProductDetails(p: Product) {
+    let url = btoa(p._links.product.href);
+    this.router.navigateByUrl(`product-details/${url}`);
   }
 }
