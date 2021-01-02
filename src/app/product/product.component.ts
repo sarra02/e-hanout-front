@@ -4,6 +4,7 @@ import {Product} from '../shared/models/product.model';
 import {CatalogueService} from '../shared/services/catalogue.service';
 import {AuthenticationService} from '../shared/services/authentication.service';
 import {HttpEventType, HttpResponse} from '@angular/common/http';
+import {CaddyService} from '../shared/services/caddy.service';
 
 @Component({
   selector: 'app-product',
@@ -12,7 +13,7 @@ import {HttpEventType, HttpResponse} from '@angular/common/http';
 })
 export class ProductComponent implements OnInit {
 
-  public  currentProduct: Product;
+  public  currentProduct;
   private currentTime: number;
   private selectedFiles;
   private progress: number;
@@ -20,7 +21,8 @@ export class ProductComponent implements OnInit {
   private editPhoto: boolean;
   private mode: number=0;
 
-  constructor(private router: Router, private route: ActivatedRoute, private catService: CatalogueService, private authService: AuthenticationService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private catService: CatalogueService, private authService: AuthenticationService,
+              private caddyService: CaddyService) { }
 
   ngOnInit(): void {
     let url = atob(this.route.snapshot.params.url);
@@ -73,11 +75,23 @@ export class ProductComponent implements OnInit {
   }
 
   onUpdateProduct(data) {
-
+    let url=this.currentProduct._links.self.href;
+    this.catService.patchResource(url,data)
+      .subscribe(d=>{
+        this.currentProduct=d;
+        this.mode=0;
+      },err=>{
+        console.log(err);
+      })
   }
 
-  onAddProductToCaddy(currentProduct: Product) {
-
+  onAddProductToCaddy(p: Product) {
+    if(!this.authService.isAuthenticated){
+      this.router.navigateByUrl("/login");
+    }
+    else{
+      this.caddyService.addProduct(p);
+    }
   }
   isAdmin() {
     return this.authService.isAdmin();
